@@ -32,7 +32,7 @@
 3. 전원을 연결하면 빨간불과 녹색불이 켜지고, 팬이 ~~돌아간다.~~ 돌아가야 한다.
 
 
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_power_on.png?raw=true" width="50%">
+<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="50%" height="50%">
 
 
 ## 2. OS 설치
