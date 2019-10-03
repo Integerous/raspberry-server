@@ -31,6 +31,10 @@
     - 5v(high speed)의 위치는 4번(빨간선), 6번(검정선)
 3. 전원을 연결하면 빨간불과 녹색불이 켜지고, 팬이 ~~돌아간다.~~ 돌아가야 한다.
 
+
+<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_power_on.png?raw=true" width="50%">
+
+
 ## 2. OS 설치
 >[다른 선택지들](https://www.raspberrypi.org/downloads/)도 있지만, 첫 경험이므로 얌전하게 공식 OS인 Raspbian을 설치한다.
 
