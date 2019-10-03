@@ -41,7 +41,7 @@
 3. OS 이미지가 구워진 Micro SD카드를 라즈베리파이에 꽂고 설치하기
 
 ### 2.1 Raspbian 이미지 다운로드
-[이 곳](https://www.raspberrypi.org/downloads/raspbian/)에서 라즈비언 이미지를 다운로드 받는다.  
+[이 곳](https://www.raspberrypi.org/downloads/raspbian/)에서 Raspbian 이미지를 다운로드 받는다.  
 나는 서버로만 사용할 예정이기 때문에 Desktop GUI가 없지만 리소스 소모가 적은 Lite 버전을 선택했다.
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspbian.png?raw=true">
@@ -51,13 +51,12 @@
 준비해둔 Micro SD카드를  
 보통 같이 딸려오는 SD Adapter 혹은 USB 리더기에 꽂아서 랩탑/데스크탑에 연결한다.  
 
-[Etcher](https://www.balena.io/etcher/)라는 프로그램을 사용해서  
-다운받은 OS 이미지를 Micro SD카드에 굽는다.(flash)
+[Etcher](https://www.balena.io/etcher/)라는 프로그램을 사용해서 다운받은 OS 이미지를 Micro SD카드에 굽는다.(flash)
 
 Etcher 사용법은 간단하다.  
 이미지를 선택하고, SD카드를 선택하고, Flash(굽기)!
 
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/etcher1.png?raw=true width="60%" height="60%">  
+<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/etcher1.png?raw=true" width="60%" height="60%">  
 
 ### 2.3 라즈베리파이에 OS 설치
 
