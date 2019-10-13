@@ -48,17 +48,22 @@
 
 ### 2.2 SD카드에 Raspbian 이미지 굽기
 
-준비해둔 Micro SD카드를  
-보통 같이 딸려오는 SD Adapter 혹은 USB 리더기에 꽂아서 랩탑/데스크탑에 연결한다.  
-
-[Etcher](https://www.balena.io/etcher/)라는 프로그램을 사용해서 다운받은 OS 이미지를 Micro SD카드에 굽는다.(flash)
-
-Etcher 사용법은 간단하다.  
-이미지를 선택하고, SD카드를 선택하고, Flash(굽기)!
+1. 준비해둔 Micro SD카드를 보통 같이 딸려오는 SD Adapter 혹은 USB 리더기에 꽂아서 랩탑/데스크탑에 연결한다.  
+2. [Etcher](https://www.balena.io/etcher/)를 사용해서 다운받은 OS 이미지를 Micro SD카드에 굽는다.(flash)
+    - Etcher 사용법은 간단하다.
+    - 이미지를 선택하고, SD카드를 선택하고, Flash(굽기)!
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/etcher1.png?raw=true" width="60%" height="60%">  
 
 ### 2.3 라즈베리파이에 OS 설치
+1. Rasbian 이미지가 구워진 SD카드를 라즈베리파이에 삽입한다.
+2. 라즈베리파이에 모니터와 키보드를 연결한 후, 전원을 연결한다.
+3. 전원을 연결하면 빨간 라즈베리 4개가 화면에 표시되면서 부팅이 시작되고, Rasbian이 자동으로 설치된다.
+4. 설치가 정상적으로 완료되면 (Lite 버전의 경우) `raspberrypi login: `이 보인다.
+5. 초기 아이디는 `pi`, 비밀번호는 `raspberry` 
+
+
+
 
 
 ## Reference
