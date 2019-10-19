@@ -1,12 +1,33 @@
 # :strawberry:라즈베리파이4로 개인서버 만들기
 >토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.
 
-## 1. 재료 준비
+## 0. 목차
+1. 재료 준비 및 시작  
+  1.0. 구입한 제품들  
+  1.1. 전원 연결  
+  1.2. 안전하게 종료하기
+  
+2. OS 설치  
+  2.0. Raspbian 설치 방법 선택  
+  2.1. Raspbian 이미지 다운로드  
+  2.2. SD카드에 Raspbian 이미지 굽기  
+  2.3. 라즈베리파이에 OS 설치
+
+3. 기본 환경 설정  
+  3.0. 설정 도구 실행  
+  3.1. 비밀번호 변경  
+  3.2. Locale, Timezone, Wi-fi Country 설정  
+  3.3. SSH 허용  
+  3.4. Hostname, Wi-fi 설정
+
+---
+
+## 1. 재료 준비 및 시작
 >구입할 당시에 한국에 라즈베리파이4 판매처가 아예 없어서, 미국에 사는 처남에게 부탁해서 제품을 구매했다.  
 >구글링을 꽤 해보고 리뷰들도 읽어 본 후에 구매한 제품들이지만, 최고의 선택이 아닐 수도 있다.  
 >(제품 홍보 절대 아닙니다~) 
 
-### 1.1. 구입한 제품들
+### 1.0. 구입한 제품들
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/whole_mini.png?raw=true" width="60%" height="60%">
 
@@ -19,7 +40,7 @@
 4. **Micro SD 카드 (64GB)** ([링크](http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=2544143323&NaPm=ct=k03v873s|ci=fc6845cda72728607bd190e48de2419986152e3c|tr=slct|sn=17703|hk=aee1cc28b613ef90d05f1b7a43e41e9303215e76&utm_term=&utm_campaign=%B3%D7%C0%CC%B9%F6pc_%B0%A1%B0%DD%BA%F1%B1%B3%B1%E2%BA%BB&utm_source=%B3%D7%C0%CC%B9%F6_PC_PCS&utm_medium=%B0%A1%B0%DD%BA%F1%B1%B3))
 5. **케이스 + 쿨러** ([링크](https://www.amazon.com/gp/offer-listing/B07VDCT57F/ref=dp_olp_new_mbc?ie=UTF8&condition=new))
 
-### 1.2. 전원 연결
+### 1.1. 전원 연결
 1. 라즈베리파이 보드를 케이스와 결합
 2. 쿨링팬을 라즈베리파이 보드의 GPIO에 연결
     - [이 곳](https://pinout.xyz/)에서 핀의 위치를 확인한다.
@@ -30,7 +51,7 @@
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
 
-### 1.3. 안전하게 종료하기
+### 1.2. 안전하게 종료하기
 처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.  
 [라즈베리파이 종료하는 방법](https://pimylifeup.com/how-to-shutdown-a-raspberry-pi/)이라는 글에 의하면, 
 SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 있다고 한다.
