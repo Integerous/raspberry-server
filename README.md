@@ -28,16 +28,27 @@
     - 5v(high speed)의 위치는 4번(빨간선), 6번(검정선)
 3. 전원을 연결하면 빨간불과 녹색불이 켜지고, 팬이 돌아간다.
 
-
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
 
+### 1.3. 안전하게 종료하기
+처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.  
+[라즈베리파이 종료하는 방법](https://pimylifeup.com/how-to-shutdown-a-raspberry-pi/)이라는 글에 의하면, 
+SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 있다고 한다.
+
+#### `$ sudo shutdown -h now` 명령을 하면, 아래의 과정을 거쳐 안전하게 종료된다.
+1. 실행중인 모든 프로세스에 **SIGTERM** 명령을 보내서 안전하게 저장하고 종료(Exit)하게 한다.
+2. 약간의 간격을 두고, **SIGKILL** 명령을 보내서 남아있는 프로세스들을 종료(Halt)한다.
+3. 모든 파일 시스템들을 분리(unmount)한다.
+4. 화면에 **System Halted**라고 표시된다. (라즈베리파이4의 경우 표시되는 메세지를 볼 겨를 없이 모니터 연결이 종료된다.)
+5. 이제 전원코드를 뽑아도 된다.
+6. 다시 부팅하려면 전원코드를 연결하면 된다.
 
 ## 2. OS 설치
 >[다른 선택지들](https://www.raspberrypi.org/downloads/)도 있지만, 첫 경험이므로 얌전하게 공식 OS인 Raspbian을 설치한다.
 
 ### 2.0. Raspbian 설치 방법 선택
 1. NOOBS 사용
-    - [NOOBS](https://www.raspberrypi.org/downloads/noobs/)(New Out Of the Box Software)라는 운영체제 설치 관리자를 사용해서 OS를 설치하는 방법
+    - [NOOBS](https://www.raspberrypi.org/downloads/noobs/)(New Out Of the Box Software)라는 운영체제 설치 관리자를 사용해서 설치할 OS를 선택하는 방법
     - 부팅과 설치 속도가 느리다.
     - 다양한 OS 중에 선택하여 설치 가능.
 2. OS 이미지를 SD카드에 기록하여 설치
@@ -73,6 +84,26 @@
 4. 설치가 정상적으로 완료되면 (Lite 버전의 경우) `raspberrypi login: `이 보인다.
 5. 초기 아이디는 `pi`, 비밀번호는 `raspberry` 
 
+
+## 3. 기본 환경 설정
+>Raspbian Lite 버전을 기준으로 서버로 활용하기 위한 기본 환경을 설정한다.
+
+### 3.0. 설정 도구 실행
+Raspbian을 설치하고 로그인까지 성공했다면,  
+`$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
+
+그럼 아래와 같이 블루라이트 차단 안경을 무력화하는 새파란 설정 도구가 실행된다.   
+<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
+
+### 3.1. 비밀번호 변경
+우선 `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
+초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
+
+### 3.2. Locale, Timezone, Wi-fi Country 설정
+Locale은 
+
+### 3.3. SSH 허용
+### 3.4. Hostname, Wi-fi 설정
 
 
 ## Reference
