@@ -2,21 +2,21 @@
 >토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.
 
 ## 0. 목차
-1. 재료 준비 및 시작  
+1. **재료 준비 및 시작**  
   1.0. 구입한 제품들  
   1.1. 전원 연결  
   1.2. 안전하게 종료하기
   
-2. OS 설치  
+2. **OS 설치**  
   2.0. Raspbian 설치 방법 선택  
   2.1. Raspbian 이미지 다운로드  
   2.2. SD카드에 Raspbian 이미지 굽기  
   2.3. 라즈베리파이에 OS 설치
 
-3. 기본 환경 설정  
+3. **기본 환경 설정**  
   3.0. 설정 도구 실행  
   3.1. 비밀번호 변경  
-  3.2. Locale, Timezone, Wi-fi Country 설정  
+  3.2. Locale, Timezone, Keyboard, Wi-fi Country 설정  
   3.3. SSH 허용  
   3.4. Hostname, Wi-fi 설정
 
@@ -52,17 +52,16 @@
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
 
 ### 1.2. 안전하게 종료하기
-처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.  
-[라즈베리파이 종료하는 방법](https://pimylifeup.com/how-to-shutdown-a-raspberry-pi/)이라는 글에 의하면, 
+- 처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.
+- [라즈베리파이 종료하는 방법](https://pimylifeup.com/how-to-shutdown-a-raspberry-pi/)이라는 글에 의하면, 
 SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 있다고 한다.
-
-#### `$ sudo shutdown -h now` 명령을 하면, 아래의 과정을 거쳐 안전하게 종료된다.
-1. 실행중인 모든 프로세스에 **SIGTERM** 명령을 보내서 안전하게 저장하고 종료(Exit)하게 한다.
-2. 약간의 간격을 두고, **SIGKILL** 명령을 보내서 남아있는 프로세스들을 종료(Halt)한다.
-3. 모든 파일 시스템들을 분리(unmount)한다.
-4. 화면에 **System Halted**라고 표시된다. (라즈베리파이4의 경우 표시되는 메세지를 볼 겨를 없이 모니터 연결이 종료된다.)
-5. 이제 전원코드를 뽑아도 된다.
-6. 다시 부팅하려면 전원코드를 연결하면 된다.
+- `$ sudo shutdown -h now` 명령을 하면, 아래의 과정을 거쳐 안전하게 종료된다.
+  1. 실행중인 모든 프로세스에 **SIGTERM** 명령을 보내서 안전하게 저장하고 종료(Exit)하게 한다.
+  2. 약간의 간격을 두고, **SIGKILL** 명령을 보내서 남아있는 프로세스들을 종료(Halt)한다.
+  3. 모든 파일 시스템들을 분리(unmount)한다.
+  4. 화면에 **System Halted**라고 표시된다. (라즈베리파이4의 경우 표시되는 메세지를 볼 겨를 없이 모니터 연결이 종료된다.)
+  5. 이제 전원코드를 뽑아도 된다.
+  6. 다시 부팅하려면 전원코드를 연결하면 된다.
 
 ## 2. OS 설치
 >[다른 선택지들](https://www.raspberrypi.org/downloads/)도 있지만, 첫 경험이므로 얌전하게 공식 OS인 Raspbian을 설치한다.
@@ -78,14 +77,14 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     
 >나의 경우 설치하려는 OS와 설치 목적이 분명하므로 2번 방법으로 설치를 진행했다.  
 
-2번 방법으로 라즈베리파이에 OS를 설치하기 위해서는 크게 3가지 작업을 해야한다.
+#### 2번 방법으로 Raspbian 설치 절차
 1. OS 이미지 다운로드  
 2. 다운받은 이미지(zip 또는 torrent)를 Micro SD 카드에 굽기
 3. OS 이미지가 구워진 Micro SD카드를 라즈베리파이에 삽입하고 부팅하여 설치하기
 
 ### 2.1. Raspbian 이미지 다운로드
-[이 곳](https://www.raspberrypi.org/downloads/raspbian/)에서 Raspbian 이미지를 다운로드 받는다.  
-나는 서버로만 사용할 예정이기 때문에 Desktop GUI가 없지만 리소스 소모가 적은 Lite 버전을 선택했다.
+- [이 곳](https://www.raspberrypi.org/downloads/raspbian/)에서 Raspbian 이미지를 다운로드 받는다.
+- 나는 서버로만 사용할 예정이기 때문에 Desktop GUI가 없지만 리소스 소모가 적은 Lite 버전을 선택했다.
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspbian.png?raw=true">
 
@@ -110,19 +109,58 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 >Raspbian Lite 버전을 기준으로 서버로 활용하기 위한 기본 환경을 설정한다.
 
 ### 3.0. 설정 도구 실행
-Raspbian을 설치하고 로그인까지 성공했다면,  
-`$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
-
-그럼 아래와 같이 블루라이트 차단 안경을 무력화하는 새파란 설정 도구가 실행된다.   
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
+- `$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
+- 그럼 아래와 같이 블루라이트 차단 안경을 무력화하는 새파란 설정 도구가 실행된다.
+   
+  <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
 
 ### 3.1. 비밀번호 변경
-우선 `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
-초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
+- `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
+- 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
+- (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
 
-### 3.2. Locale, Timezone, Wi-fi Country 설정
-Locale은 
+### 3.2. Locale, Timezone, Keyboard, Wi-fi Country 설정
+- `4. Localisation Options`를 선택하면 아래 4가지 선택지가 보인다.  
+  - `I1 Change Locale`
+  - `I2 Change Timezone`
+  - `I3 Change Keyboard Layout`
+  - `I4 Change Wi-fi Country`
 
+#### 3.2.1. Locale 변경
+- `I1 Change Locale` 클릭
+- 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
+  - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
+- Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
+
+#### 3.2.2. Timezone 변경
+- `I2 Change Timezone` 클릭
+- Asia 선택, Seoul 선택
+  - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
+
+#### 3.2.3. Keyboard Layout 변경
+- `I3 Change Keyboard Layout` 클릭
+- [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
+- 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
+- ~~해피해킹도 선택지에 있어서 기뻤다.~~
+
+#### 3.2.4. Wi-fi Country 변경  
+- 반드시 변경해야되는 것은 아니다.
+  - 변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
+- 변경할 경우 `I4 Change Wi-fi Country` 클릭
+- `US United States` 혹은 `GB Britain (UK)` 선택
+  - `GB Britain (UK)`를 선택해야만 정상 동작 한다는 사용자들도 있다.
+  - u를 입력하면 United States(미국)을 금방 찾을 수 있다.
+- **`KR Korea (South)`를 선택하면 안된다.**
+  - 한국으로 선택했을때 무선 네트워크를 검색하지 못한다는 블로그 글이 많다.
+  - 나의 경우
+    - 한국으로 선택해도 우리집 무선 네트워크는 검색이 된다.
+      - 검색 방법 : `sudo iwlist wlan0 scan` 
+    - 그런데 한국을 선택하고 `$ ping www.google.com`으로 ping을 날려보면,
+    - 패킷이 전송되지 않고 `ping: www.google.com: Temporary failure in name resolution` 메세지가 뜬다.
+    - 이 때, 미국, 영국, 일본을 선택하면 패킷이 정상적으로 전송되는데,
+    - 국가코드를 삭제해도 패킷이 정상적으로 전송된다.
+      - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country=KR`을 삭제
+      
 ### 3.3. SSH 허용
 ### 3.4. Hostname, Wi-fi 설정
 
@@ -135,3 +173,7 @@ Locale은
 - https://blog.rajephon.dev/2019/07/12/setup-raspberrypi-home-server/
 - https://www.youtube.com/watch?v=8grooZWbH9Y
 - https://withcoding.com/45
+- https://pimylifeup.com/how-to-shutdown-a-raspberry-pi/
+- https://dullwolf.tistory.com/17
+- http://progtrend.blogspot.com/2017/08/raspberry-pi-wifi.html
+- https://webnautes.tistory.com/903
