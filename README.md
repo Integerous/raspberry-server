@@ -121,36 +121,30 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 - 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
 - (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
 
-### 3.2. Locale, Timezone, Keyboard, Wi-fi Country 설정
-- `4. Localisation Options`를 선택하면 아래 4가지 선택지가 보인다.  
-  - `I1 Change Locale`
-  - `I2 Change Timezone`
-  - `I3 Change Keyboard Layout`
-  - `I4 Change Wi-fi Country`
-
-#### 3.2.1. Locale 변경
-- `I1 Change Locale` 클릭
+### 3.2. Locale 변경
+- `4. Localisation Options` -> `I1 Change Locale` 클릭
 - 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
   - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
 - Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
 
-#### 3.2.2. Timezone 변경
-- `I2 Change Timezone` 클릭
+### 3.4. Timezone 변경
+- `4. Localisation Options` -> `I2 Change Timezone` 클릭
 - Asia 선택, Seoul 선택
   - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
 
-#### 3.2.3. Keyboard Layout 변경
-- `I3 Change Keyboard Layout` 클릭
+### 3.5. Keyboard Layout 변경
+- `4. Localisation Options` -> `I3 Change Keyboard Layout` 클릭
 - [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
 - 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
 - ~~해피해킹도 선택지에 있어서 기뻤다.~~
 
-#### 3.2.4. Wi-fi Country 변경  
-- 반드시 변경해야 되는 것은 아니다.
-  - 변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
-- 변경할 경우 `I4 Change Wi-fi Country` 클릭
+### 3.6. Wi-fi Country 변경  
+>(주의) 반드시 변경해야 되는 것은 아니다.  
+>변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
+
+- `4. Localisation Options` -> `I4 Change Wi-fi Country` 클릭
 - `US United States` 혹은 `GB Britain (UK)` 선택
-  - `GB Britain (UK)`를 선택해야만 정상 동작 한다는 사용자들도 있다.
+  - GB Britain (UK)를 선택해야만 정상 동작 한다는 사용자들도 있다.
   - u를 입력하면 United States(미국)을 금방 찾을 수 있다.
 - **`KR Korea (South)`를 선택하면 안된다.**
   - 한국으로 선택했을때 무선 네트워크를 검색하지 못한다는 블로그 글이 많다.
