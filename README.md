@@ -116,29 +116,23 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
    
   <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
 
-### 3.1. SSH 허용
->~~시력 보호를 위해~~ 라즈베리파이에 SSH로 원격 접속해서 사용하는 것이 훨씬 편리하다.  
->처음에 모니터와 키보드를 라즈베리파이에 연결해서 SSH 접속을 설정하고, 그 이후에는  
->모니터와 키보드를 연결할 필요 없이, 주로 사용하는 PC/랩탑으로 라즈베리파이에 SSH로 접속하면 된다. (마치 AWS EC2 인스턴스가 내 책상에..)
-- `5. Interfacing Options` -> `P2 SSH` -> `YES`
-
-### 3.2. 비밀번호 변경
+### 3.1. 비밀번호 변경
 - `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
 - 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
 - (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
 
-### 3.3. Locale 변경
+### 3.2. Locale 변경
 - `4. Localisation Options` -> `I1 Change Locale` 클릭
 - 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
   - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
 - Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
 
-### 3.4. Timezone 변경
+### 3.3. Timezone 변경
 - `4. Localisation Options` -> `I2 Change Timezone` 클릭
 - Asia 선택, Seoul 선택
   - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
 
-### 3.5. Keyboard Layout 변경
+### 3.4. Keyboard Layout 변경
 - `4. Localisation Options` -> `I3 Change Keyboard Layout` 클릭
 - [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
 - 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
@@ -163,13 +157,32 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - 또는 국가코드를 아예 삭제해도 패킷이 정상적으로 전송된다.
       - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}` 삭제
       
-### 3.6. Hostname, Wi-fi 설정 
+### 3.6. Wi-fi 설정
+1. `2. Network Options` -> `N2 Wi-fi    Enter SSID and passphrase` 클릭
+2. 라즈베리파이가 사용할 공유기의 SSID(와이파이 이름) 입력. 예시) KT_GiGA_2G_XXXX
+3. 비밀번호 입력
+4. 공유기 접속 확인
+    - `$ iwconfig` 명령의 결과에서 `ESSID`가 입력한 것과 같으면 정상 접속. 
+
+### 3.7. Wi-fi 비밀번호 암호화
+- 
 
 
-### 3.7. Vim 설치
-`$ sudo apt-get install vim`
+### 3.7. SSH 허용 및 접속
+>~~시력 보호를 위해~~ 라즈베리파이에 SSH로 원격 접속해서 사용하는 것이 훨씬 편리하다.  
+>SSH 접속을 허용하면 모니터와 키보드를 연결할 필요 없이,  
+>PC/랩탑에서 SSH를 통해 라즈베리파이에 접속하면 된다. (마치 AWS EC2 인스턴스가 내 책상에..)
+1. SSH 허용
+    - `5. Interfacing Options` -> `P2 SSH` -> `YES`
+2. 라즈베리파이 IP 확인
+    - `$ ifconfig`
+    - `wlan0` 의 `inet addr: xxx.xx.x.xx`에 적힌 IP 확인
+3. SSH 접속
+    - 주로 사용하는 PC/랩탑에서 `$ ssh pi@xxx.xx.x.xx`로 접속
 
-### 3.8. 온도 측정용 쉘 스크립트 작성
+### 3.8. 고정 아이피 설정
+
+### 3.9. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
     - `$ sudo vim thermometer.sh`
 2. 쉘 스크립트 작성
@@ -202,3 +215,4 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 - https://dullwolf.tistory.com/17
 - http://progtrend.blogspot.com/2017/08/raspberry-pi-wifi.html
 - https://webnautes.tistory.com/903
+- http://egloos.zum.com/lunar456th/v/6397975
