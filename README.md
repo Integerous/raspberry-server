@@ -38,7 +38,9 @@
     - [이 제품](https://www.devicemart.co.kr/goods/view?no=1342118)을 사용해도 될 것 같다. 
 3. **모니터 케이블 (Micro-HDMI to HDMI)** ([링크](https://www.amazon.com/AmazonBasics-High-Speed-Micro-HDMI-HDMI-Cable/dp/B014I8U33I/ref=cm_cr_arp_d_product_top?ie=UTF8))
 4. **Micro SD 카드 (64GB)** ([링크](http://www.11st.co.kr/product/SellerProductDetail.tmall?method=getSellerProductDetail&prdNo=2544143323&NaPm=ct=k03v873s|ci=fc6845cda72728607bd190e48de2419986152e3c|tr=slct|sn=17703|hk=aee1cc28b613ef90d05f1b7a43e41e9303215e76&utm_term=&utm_campaign=%B3%D7%C0%CC%B9%F6pc_%B0%A1%B0%DD%BA%F1%B1%B3%B1%E2%BA%BB&utm_source=%B3%D7%C0%CC%B9%F6_PC_PCS&utm_medium=%B0%A1%B0%DD%BA%F1%B1%B3))
-5. **케이스 + 쿨러** ([링크](https://www.amazon.com/gp/offer-listing/B07VDCT57F/ref=dp_olp_new_mbc?ie=UTF8&condition=new))
+5. **케이스 + 쿨링팬** ([링크](https://www.amazon.com/gp/offer-listing/B07VDCT57F/ref=dp_olp_new_mbc?ie=UTF8&condition=new))
+    - 반드시 필요한 것은 아니지만, 라즈베리파이4의 발열 이슈가 있는데 해외 유저들은 쿨링팬으로 해결한다고 한다.
+    - 발열 이슈 때문에 보드 설계를 수정할 것이라는 제작사측의 발표도 있었다. (젠장)   
 
 ### 1.1. 전원 연결
 1. 라즈베리파이 보드를 케이스와 결합
@@ -110,7 +112,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 ### 3.0. 설정 도구 실행
 - `$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
-- 그럼 아래와 같이 블루라이트 차단 안경을 무력화하는 새파란 설정 도구가 실행된다.
+- 그럼 아래와 같이 ~~블루라이트 차단 안경을 무력화하는~~ 새파란 설정 도구가 실행된다.
    
   <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
 
@@ -144,7 +146,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 - ~~해피해킹도 선택지에 있어서 기뻤다.~~
 
 #### 3.2.4. Wi-fi Country 변경  
-- 반드시 변경해야되는 것은 아니다.
+- 반드시 변경해야 되는 것은 아니다.
   - 변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
 - 변경할 경우 `I4 Change Wi-fi Country` 클릭
 - `US United States` 혹은 `GB Britain (UK)` 선택
@@ -157,9 +159,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
       - 검색 방법 : `sudo iwlist wlan0 scan` 
     - 그런데 한국을 선택하고 `$ ping www.google.com`으로 ping을 날려보면,
     - 패킷이 전송되지 않고 `ping: www.google.com: Temporary failure in name resolution` 메세지가 뜬다.
-    - 이 때, 미국, 영국, 일본을 선택하면 패킷이 정상적으로 전송되는데,
-    - 국가코드를 삭제해도 패킷이 정상적으로 전송된다.
-      - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country=KR`을 삭제
+    - 미국, 영국, 일본을 선택하면 패킷이 정상적으로 전송된다.
+    - 또는 국가코드를 아예 삭제해도 패킷이 정상적으로 전송된다.
+      - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}` 삭제
       
 ### 3.3. SSH 허용
 ### 3.4. Hostname, Wi-fi 설정
