@@ -112,61 +112,66 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 >Raspbian Lite 버전을 기준으로 서버로 활용하기 위한 기본 환경을 설정한다.
 
 ### 3.0. 설정 도구 실행
-- `$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
-- 그럼 아래와 같이 ~~블루라이트 차단 안경을 무력화하는~~ 새파란 설정 도구가 실행된다.
+1. `$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
+2. 그럼 아래와 같이 ~~블루라이트 차단 안경을 무력화하는~~ 새파란 설정 도구가 실행된다.
    
   <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
 
 ### 3.1. 비밀번호 변경
-- `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
-- 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
-- (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
+1. `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
+2. 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
+3. (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
 
 ### 3.2. Locale 변경
-- `4. Localisation Options` -> `I1 Change Locale` 클릭
-- 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
-  - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
-- Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
+1. `4. Localisation Options` -> `I1 Change Locale` 클릭
+2. 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
+    - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
+3. Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
 
 ### 3.3. Timezone 변경
-- `4. Localisation Options` -> `I2 Change Timezone` 클릭
-- Asia 선택, Seoul 선택
-  - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
+1. `4. Localisation Options` -> `I2 Change Timezone` 클릭
+2. Asia 선택, Seoul 선택
+    - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
 
 ### 3.4. Keyboard Layout 변경
-- `4. Localisation Options` -> `I3 Change Keyboard Layout` 클릭
-- [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
-- 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
-- ~~해피해킹도 선택지에 있어서 기뻤다.~~
+1. `4. Localisation Options` -> `I3 Change Keyboard Layout` 클릭
+2. [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
+3. 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
+4. ~~해피해킹도 선택지에 있어서 기뻤다.~~
 
 ### 3.5. Wi-fi Country 변경  
 >(주의) 반드시 변경해야 되는 것은 아니다.  
 >변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
 
-- `4. Localisation Options` -> `I4 Change Wi-fi Country` 클릭
-- `US United States` 혹은 `GB Britain (UK)` 선택
-  - GB Britain (UK)를 선택해야만 정상 동작 한다는 사용자들도 있다.
-  - u를 입력하면 United States(미국)을 금방 찾을 수 있다.
-- **`KR Korea (South)`를 선택하면 안된다.**
-  - 한국으로 선택했을때 무선 네트워크를 검색하지 못한다는 블로그 글이 많다.
-  - 나의 경우
-    - 한국으로 선택해도 우리집 무선 네트워크는 검색이 된다.
-      - 검색 방법 : `sudo iwlist wlan0 scan` 
-    - 그런데 한국을 선택하고 `$ ping www.google.com`으로 ping을 날려보면,
-    - 패킷이 전송되지 않고 `ping: www.google.com: Temporary failure in name resolution` 메세지가 뜬다.
-    - 미국, 영국, 일본을 선택하면 패킷이 정상적으로 전송된다.
-    - 또는 국가코드를 아예 삭제해도 패킷이 정상적으로 전송된다.
-      - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}` 삭제
+1. `4. Localisation Options` -> `I4 Change Wi-fi Country` 클릭
+2. `US United States` 혹은 `GB Britain (UK)` 선택
+    - GB Britain (UK)를 선택해야만 정상 동작 한다는 사용자들도 있다.
+    - u를 입력하면 United States(미국)을 금방 찾을 수 있다.
+3. **`KR Korea (South)`를 선택하면 안된다.**
+    - 한국으로 선택했을때 무선 네트워크를 검색하지 못한다는 블로그 글이 많다.
+    - 나의 경우
+      - 한국으로 선택해도 우리집 무선 네트워크는 검색이 된다.
+        - 검색 방법 : `sudo iwlist wlan0 scan` 
+      - 그런데 한국을 선택하고 `$ ping www.google.com`으로 ping을 날려보면,
+      - 패킷이 전송되지 않고 `ping: www.google.com: Temporary failure in name resolution` 메세지가 뜬다.
+      - 미국, 영국, 일본을 선택하면 패킷이 정상적으로 전송된다.
+      - 또는 국가코드를 아예 삭제해도 패킷이 정상적으로 전송된다.
+        - 국가코드 삭제 방법 : `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}` 삭제
       
-### 3.6. Wi-fi 설정
+### 3.6. Wi-fi 설정 (raspi-config 사용)
+>와이파이를 raspi-config로 설정하는 방법과 wpa_passphrase로 설정하는 방법이 있다.
+
 1. `2. Network Options` -> `N2 Wi-fi    Enter SSID and passphrase` 클릭
 2. 라즈베리파이가 사용할 공유기의 SSID(와이파이 이름) 입력. 예시) KT_GiGA_2G_XXXX
 3. 비밀번호 입력
 4. 공유기 접속 확인
     - `$ iwconfig` 명령의 결과에서 `ESSID`가 입력한 것과 같으면 정상 접속. 
+5. 설정 확인
+    - 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에서 SSID와 비밀번호 확인 가능    
 
-### 3.7. Wi-fi 비밀번호 암호화
+### 3.7. Wi-fi 설정 (wpa_passphrase 사용)
 >raspi-config로 와이파이 설정 시, password가 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에 그대로 노출된다.  
+>비밀번호를 암호화하기 위해서는 raspi-config 대신 wpa_passphrase 명령으로 와이파이를 설정하는 것이 좋다. 
 
 1. `$ wpa_passphrase {SSID} {비밀번호}` 명령을 치면, network 정보가 아래와 같이 콘솔에 출력된다.
     ~~~
@@ -178,7 +183,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     ~~~
 
 2. 출력된 network 정보를 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에 추가한다.
-    - 이 때, 마우스가 없으니 출력될 정보를 Redirecting output으로 설정 파일에 넣는다.  
+    - 이 때, 마우스가 없으니 출력될 정보를 Redirecting output(>>)으로 설정 파일에 넣는다.  
     - [라즈베리파이 공식 문서](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)에 자세하게 설명되어있다. 
     ~~~sh
     $ sudo su  # root 권한으로 변경
