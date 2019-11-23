@@ -90,6 +90,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspbian.png?raw=true">
 
+
 ### 2.2. SD카드에 Raspbian 이미지 굽기
 
 0. 기존에 사용했었던 SD카드는 포맷한 후에 사용하는 것이 안전하다. ([SD Memory Card Formatter](https://www.sdcard.org/downloads/formatter/))
@@ -216,13 +217,60 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 3. SSH 접속
     - 주로 사용하는 PC/랩탑에서 `$ ssh pi@xxx.xx.x.xx`로 접속
 
-### 3.8. 고정 아이피 설정
+## 4. IP 고정 할당, 포트포워딩, DDNS 설정
+>이 부분은 사용하는 공유기에 따라 설정 방법이 다르다.  
+>ipTIME A3004NS-M 모델 (펌웨어 버전 11.00.4) 기준으로 작성했다.
 
-### 3.9 한글 폰트 및 입력기 설치
+### 4.1. 내부IP 고정
+>공유기를 통해 wi-fi를 사용하는 기기들에게 공유기는 임의로 내부IP(사설IP)를 할당한다.  
+>ipTIME의 경우 맥북은 192.168.0.2, 휴대폰은 192.168.0.3, 라즈베리파이는 192.168.0.4 이런식이다.  
+>그런데 공유기에 전원이 차단되어 공유기가 재부팅되는 경우 등으로 인해 내부 IP가 초기화 될 수 있다.  
+>이런 상황을 대비해서 내부 IP를 공유기 내에서 고정시키는 것이 좋다.
+
+1. ipTIME 접속 (192.168.0.1)
+2. 고급설정 - 네트워크 관리 - DHCP 서버 설정
+3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼을 누른다.
+    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/iptime01.png?raw=true" width="60%" height="60%">
+
+
+### 4.1. IP 고정할당
+>헷갈리면 안되는 것이, 고정 IP와 IP 고정할당은 다른 개념이다.  
+>가정집에서는 대부분 유동 IP가 할당되고, ISP 사업자(KT, LG U+, SKT 등)에 추가요금을 내야 고정 IP를 제공받을 수 있다.  
+>그런데 월 3만원 지불하고 고정 IP를 제공받을 바에, 클라우드 서비스를 이용하거나 서버를 임대하는 것이 나은 것 같다.
+
+유동 IP는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 IP를 할당받고
+
+
+- 참고 : [개인서버에서 유동 IP를 고정 IP처럼 (DDNS 아님)](https://studyforus.tistory.com/137)
+
+### 4.2. 포트포워딩 설정
+>외부에서 라즈베리파이로 ssh 접속하기 위한 포트포워딩  
+>
+
+1. ipTIME 접속 (192.168.0.1)
+2. 고급설정 - NAT/라우터 관리 - 포트포워드 설정
+3. 새 규칙 추가
+    - 규칙이름: 사용자 정의
+    - 내부 IP주소: 3.7에서 확인한 라즈베리파이의 IP주소 입력
+    - 프로토콜: TCP
+    - 외부 포트: 사용자 정의
+    - 내부 포트: 22(ssh), 443(https), 80(http) 등
+      - [http의 기본 포트가 80, https의 기본 포트가 443인 이유는 무엇일까?](https://johngrib.github.io/wiki/why-http-80-https-443/) 
+
+### 4.3. DDNS 설정
+
+### ipTIME 원격 접속
+    - 고급설정 - 보안기능 - 공유기 접속/보안관리
+    - 원격 관리 포트 사용 체크 및 포트번호 설정
+    - 1nteger.iptime.org:포트번호로 원격에서 iptime 접근 가능
+
+## 5. Nginx 설치
+
+### 5.1 한글 폰트 및 입력기 설치
 - `$ sudo apt-get install fonts-unfonts-core`
 - `$ sudo apt-get install ibus-hangul`
 
-### 3.10 Nginx 문자셋 설정
+### 5.2 Nginx 문자셋 설정
 - `$ sudo vim /etc/nginx/nginx.conf`
 - Basic Settings 하단에 아래 내용 추가
   ~~~
@@ -233,10 +281,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   ~~~
   
 ### 3.11 iptime 설정
-- ddns 설정
-- iptime 원격 접속
-  - 고급설정 - 보안기능 - 공유기 접속/보안관리 - 원격 관리 포트 사용 체크 및 포트번호 설정
-  - 1nteger.iptime.org:포트번호로 원격에서 iptime 접근 가능
+
 
 ### 3.9. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
