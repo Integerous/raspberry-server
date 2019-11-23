@@ -97,6 +97,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 2. [Etcher](https://www.balena.io/etcher/)를 사용해서 다운받은 OS 이미지를 Micro SD카드에 굽는다.(flash)
     - Etcher 사용법은 간단하다.
     - 이미지를 선택하고, SD카드를 선택하고, Flash(굽기)!
+      - 이 때, 다운받은 Raspbian OS 이미지가 zip 파일일텐데, 압축을 풀 필요없이 그대로 사용하면 된다. 
     - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/etcher1.png?raw=true" width="60%" height="60%">  
 
 ### 2.3. 라즈베리파이에 OS 설치
@@ -165,9 +166,39 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - `$ iwconfig` 명령의 결과에서 `ESSID`가 입력한 것과 같으면 정상 접속. 
 
 ### 3.7. Wi-fi 비밀번호 암호화
-- 
+>raspi-config로 와이파이 설정 시, password가 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에 그대로 노출된다.  
 
+1. `$ wpa_passphrase {SSID} {비밀번호}` 명령을 치면, network 정보가 아래와 같이 콘솔에 출력된다.
+    ~~~
+    network={
+            ssid="KT_GiGA_5G_HOME"
+            #psk="{비밀번호}"
+            psk=7ac0c35da93c82d ....(생략)
+    }
+    ~~~
 
+2. 출력된 network 정보를 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에 추가한다.
+    - 이 때, 마우스가 없으니 출력될 정보를 Redirecting output으로 설정 파일에 넣는다.  
+    - [라즈베리파이 공식 문서](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)에 자세하게 설명되어있다. 
+    ~~~sh
+    $ sudo su  # root 권한으로 변경
+    $ wpa_passphrase {SSID} {비밀번호} >> /etc/wpa_supplicant/wpa_supplicant.conf
+    ~~~ 
+
+3. wpa_supplicant.conf 파일은 아래와 같다.
+    ~~~conf
+    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    update_config=1
+    
+    network={
+              ssid="KT_GiGA_5G_HOME"
+              #psk="{비밀번호}"
+              psk=7ac0c35da93c82d ....(생략)
+    }
+    ~~~
+    - (주의) network 윗부분의 내용도 반드시 포함되어야 한다.
+    - 비밀번호가 노출된 `#psk="{비밀번호}"`는 지우는 것이 좋다.
+    
 ### 3.7. SSH 허용 및 접속
 >~~시력 보호를 위해~~ 라즈베리파이에 SSH로 원격 접속해서 사용하는 것이 훨씬 편리하다.  
 >SSH 접속을 허용하면 모니터와 키보드를 연결할 필요 없이,  
@@ -181,6 +212,26 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - 주로 사용하는 PC/랩탑에서 `$ ssh pi@xxx.xx.x.xx`로 접속
 
 ### 3.8. 고정 아이피 설정
+
+### 3.9 한글 폰트 및 입력기 설치
+- `$ sudo apt-get install fonts-unfonts-core`
+- `$ sudo apt-get install ibus-hangul`
+
+### 3.10 Nginx 문자셋 설정
+- `$ sudo vim /etc/nginx/nginx.conf`
+- Basic Settings 하단에 아래 내용 추가
+  ~~~
+  charset   utf-8;
+  server {
+    charset utf-8;
+  }
+  ~~~
+  
+### 3.11 iptime 설정
+- ddns 설정
+- iptime 원격 접속
+  - 고급설정 - 보안기능 - 공유기 접속/보안관리 - 원격 관리 포트 사용 체크 및 포트번호 설정
+  - 1nteger.iptime.org:포트번호로 원격에서 iptime 접근 가능
 
 ### 3.9. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
