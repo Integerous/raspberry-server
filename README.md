@@ -213,39 +213,45 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - `5. Interfacing Options` -> `P2 SSH` -> `YES`
 2. 라즈베리파이 IP 확인
     - `$ ifconfig`
-    - `wlan0` 의 `inet addr: xxx.xx.x.xx`에 적힌 IP 확인
+    - 무선랜의 경우, `wlan0` 의 `inet addr: xxx.xx.x.xx`에 적힌 IP 확인 (유선은 eth0)
 3. SSH 접속
-    - 주로 사용하는 PC/랩탑에서 `$ ssh pi@xxx.xx.x.xx`로 접속
+    - (내부망) 주로 사용하는 PC/랩탑에서 `$ ssh pi@{내부IP 주소}`로 접속
+    - (외부망) 밑에서 설명한 포트포워딩 설정 후 `$ ssh -p {외부포트} pi@{외부IP 주소}`로 접속
 
-## 4. IP 고정 할당, 포트포워딩, DDNS 설정
+
+
+
+## 4. 네트워크 설정
 >이 부분은 사용하는 공유기에 따라 설정 방법이 다르다.  
 >ipTIME A3004NS-M 모델 (펌웨어 버전 11.00.4) 기준으로 작성했다.
+
 
 ### 4.1. 내부IP 고정
 >공유기를 통해 wi-fi를 사용하는 기기들에게 공유기는 임의로 내부IP(사설IP)를 할당한다.  
 >ipTIME의 경우 맥북은 192.168.0.2, 휴대폰은 192.168.0.3, 라즈베리파이는 192.168.0.4 이런식이다.  
->그런데 공유기에 전원이 차단되어 공유기가 재부팅되는 경우 등으로 인해 내부 IP가 초기화 될 수 있다.  
+>그런데 공유기에 전원이 차단되어 공유기가 재부팅되는 경우 등으로 인해 내부 IP 설정이 초기화 될 수 있다.  
 >이런 상황을 대비해서 내부 IP를 공유기 내에서 고정시키는 것이 좋다.
 
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 네트워크 관리 - DHCP 서버 설정
-3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼을 누른다.
+3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼 클릭.
     <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/iptime01.png?raw=true" width="60%" height="60%">
 
+### 4.2. DDNS 설정
+>ISP 사업자(우리집은 KT)는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 우리집에 유동 IP를 할당해준다.   
+>그런데 ISP 사업자가 DHCP 서버를 리셋하거나, 어떤 수작을 부리면 우리집에 할당되었던 IP가 변경된다. (그래서 가정집은 유동IP다.)  
+>이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에, A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
+>DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에, IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
+>그런데 ipTIME에서 자체 DDNS 서비스를 제공한다.  
+>추후에 이 ipTIME DDNS 구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 등록해서 고정IP 처럼 사용할 것이다. 
 
-### 4.1. IP 고정할당
->헷갈리면 안되는 것이, 고정 IP와 IP 고정할당은 다른 개념이다.  
->가정집에서는 대부분 유동 IP가 할당되고, ISP 사업자(KT, LG U+, SKT 등)에 추가요금을 내야 고정 IP를 제공받을 수 있다.  
->그런데 월 3만원 지불하고 고정 IP를 제공받을 바에, 클라우드 서비스를 이용하거나 서버를 임대하는 것이 나은 것 같다.
+1. ipTIME 접속 (192.168.0.1)
+2. 고급설정 - 특수기능 - DDNS 설정
+3. 호스트이름과 사용자 ID 입력
+    - 외부IP 대신 도메인(스러운) {호스트이름}.iptime.org로 라즈베리파이에 접근할 수 있다. 
 
-유동 IP는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 IP를 할당받고
-
-
-- 참고 : [개인서버에서 유동 IP를 고정 IP처럼 (DDNS 아님)](https://studyforus.tistory.com/137)
-
-### 4.2. 포트포워딩 설정
->외부에서 라즈베리파이로 ssh 접속하기 위한 포트포워딩  
->
+### 4.3. 포트포워딩 설정
+>외부에서 라즈베리파이의 IP 혹은 도메인과 지정된 포트로 접근했을 때, 연결시킬 내부 포트 설정
 
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - NAT/라우터 관리 - 포트포워드 설정
@@ -253,18 +259,23 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - 규칙이름: 사용자 정의
     - 내부 IP주소: 3.7에서 확인한 라즈베리파이의 IP주소 입력
     - 프로토콜: TCP
-    - 외부 포트: 사용자 정의
+    - 외부 포트: 예시- 20000(ssh), 443(https), 80(http)
     - 내부 포트: 22(ssh), 443(https), 80(http) 등
       - [http의 기본 포트가 80, https의 기본 포트가 443인 이유는 무엇일까?](https://johngrib.github.io/wiki/why-http-80-https-443/) 
 
-### 4.3. DDNS 설정
+### 4.4. ipTIME 원격 접속 허용
+1. ipTIME 접속 (192.168.0.1)
+2. 고급설정 - 보안기능 - 공유기 접속/보안관리
+3. 원격 관리 포트 사용 체크 및 원하는 포트번호 설정
+4. 설정해둔 ipTIME의 DDNS 도메인 + 포트번호로 원격에서 ipTIME 접근 가능
+    - (예시) 1nteger.iptime.org:22000 
 
-### ipTIME 원격 접속
-    - 고급설정 - 보안기능 - 공유기 접속/보안관리
-    - 원격 관리 포트 사용 체크 및 포트번호 설정
-    - 1nteger.iptime.org:포트번호로 원격에서 iptime 접근 가능
 
-## 5. Nginx 설치
+## 5. Nginx 설치 및 설정
+
+### 5.1. Nginx 설치
+1. `$ sudo apt-get update`
+2. `$ sudo apt-get install nginx`
 
 ### 5.1 한글 폰트 및 입력기 설치
 - `$ sudo apt-get install fonts-unfonts-core`
@@ -280,8 +291,41 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   }
   ~~~
   
-### 3.11 iptime 설정
+## 6. 도메인, SSL 설정
 
+### 6.1. 도메인 구입
+>블로그 도메인을 Godaddy에서 구입했었는데, 비싸다.  
+>구글링 결과 Namecheap가 평가가 훨씬 좋아서 선택했다.  
+>그리고 Godaddy는 ANAME이나 Alias를 제공하지 않아서 기존에 있던 도메인도 Namecheap으로 이전했다.
+
+### 6.2. 도메인 연결
+>이 부분에서 삽질을 많이 했다. 아래에 삽질 과정을 요약했다.
+
+1. ipTIME에서 설정한 DDNS 도메인(go-quality.iptime.org)을 구입한 도메인(go-quality.dev)의 CNAME으로 등록해서 고정IP 처럼 사용하려 했다.
+2. 그런데 `go-quality.iptime.org`는 서브 도메인(www. 등등)이 없는 Root domain이다.
+3. Root domain은 서브 도메인이 없으므로 CNAME 등록하면서 Host 부분에 와일드카드(* 또는 @)를 사용하면 된다고 생각했다.
+4. 하지만 정상적으로 접속되지 않았다.
+5. 알아보니 Root domain은 CNAME으로 설정하지 않는 것이 표준([RFC 1912](https://tools.ietf.org/html/rfc1912), [RFC 2181](https://tools.ietf.org/html/rfc2181))이었다.
+6. 이 표준은 기술적인 제약은 아니고 Contractual(계약상의) 제약이다. 하지만 Namecheap이나 Godaddy에서는 표준을 따르고 있었다.
+7. Root domain을 CNAME으로 등록하는 방법을 구글링하다보니 `ANAME`, `ALIAS` 등의 방법을 알게 되었다.
+8. Godaddy에서는 ANAME도 ALIAS도 제공하지 않았는데, 다행히 Namecheap은 ALIAS를 사용해서 CNAME 처럼 등록할 수 있었다.
+9. 하지만 정상적으로 접속되지 않았다.
+10. 알아보니 `.dev` 도메인은 https 접속이 default인데, SSL 인증서를 세팅하지 않은 것이다.
+11. 우선 Root domain을 CNAME 처럼 등록할 수 있는지 먼저 테스트를 해보고 SSL 인증서를 세팅하기로 했다.
+12. Godaddy에 등록된 도메인 중 놀고 있는 도메인을 Namecheap으로 옮겼다.
+13. 옮긴 도메인에 `go-quality.iptime.org`를 `ALIAS`로 설정했더니, CNAME 처럼 등록되었다.
+14. `www.놀고있던도메인.com` 으로 접근하니 `go-quality.iptime.org`에 띄워둔 Nginx 랜딩페이지를 볼 수 있었다. (성공)
+
+### 6.2. SSL 설정
+
+1. 실행중인 nginx 종료
+    - letsencrypt가 80번 포트를 사용해서 인증을 시도하기 때문
+    - `$ sudo service nginx stop`
+2. `$ sudo apt install letsencrypt`
+3. `sudo letsencrypt certonly --standalone -d go-quality.iptime.org`
+4. 결과
+    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/certbot.png?raw=true" width="60%" height="60%">
+    
 
 ### 3.9. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
