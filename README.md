@@ -27,10 +27,10 @@
   3.3. Timezone 설정  
   3.4. Keyboard Layout 설정  
   3.5. Wi-fi Country 설정  
-  3.6. Wi-fi 설정 (raspi-config 사용)
+  3.6. Wi-fi 설정 (raspi-config 사용)  
   3.7. Wi-fi 설정 (wpa_passphrase 사용)  
   3.8. SSH 허용 및 접속  
-  3.4. Hostname, Wi-fi 설정  
+  3.9. Hostname, Wi-fi 설정  
 
 4. **네트워크 설정**  
   4.0. 내부IP 고정  
@@ -46,16 +46,18 @@
 6. **도메인, SSL 설정**  
   6.0. 도메인 구입  
   6.1. 도메인 연결  
-  6.2. SSL 설정  
+  6.2. SSL 인증서 생성 및 적용  
   6.3. SSL 인증서 자동갱신 설정  
   
 7. **기타**  
   7.0. 온도 측정용 쉘 스크립트 작성  
 
+-----
+
 ## 1. 재료 준비 및 시작
 >구입할 당시에 한국에 라즈베리파이4 판매처가 아예 없어서, 미국에 사는 처남에게 부탁해서 제품을 구매했다.  
 >구글링을 꽤 해보고 리뷰들도 읽어 본 후에 구매한 제품들이지만, 최고의 선택이 아닐 수도 있다.  
->(제품 홍보 절대 아닙니다~) 
+>(제품 홍보 절대 아님!) 
 
 ### 1.0. 구입한 제품들
 
@@ -172,7 +174,8 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 ### 3.5. Wi-fi Country 설정 
 >(주의) 반드시 변경해야 되는 것은 아니다.  
->변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
+>변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데,  
+>이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
 
 1. `4. Localisation Options` -> `I4 Change Wi-fi Country` 클릭
 2. `US United States` 혹은 `GB Britain (UK)` 선택
@@ -269,20 +272,27 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 네트워크 관리 - DHCP 서버 설정
 3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼 클릭.
+    
     <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/iptime01.png?raw=true" width="60%" height="60%">
 
 ### 4.1. DDNS 설정
->ISP 사업자(우리집은 KT)는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 우리집에 유동 IP를 할당해준다.   
->유동IP라도 IP가 자주 바뀌지는 않는다. 하지만 ISP 사업자가 DHCP 서버를 리셋하는 등의 수작을 부리면 우리집에 할당되었던 IP가 변경된다. (그래서 가정집은 유동IP다.)  
->이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에, A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
->그런데 DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에, IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
+>ISP 사업자(KT, SKT 등)는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 가정집에 유동 IP를 할당해준다.  
+>   
+>유동IP라도 IP가 자주 바뀌지는 않는다.  
+>하지만 ISP 사업자가 DHCP 서버를 리셋하는 등의 수작을 부리면 우리집에 할당되었던 IP가 변경된다.  
+>이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에,  
+>A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
+>  
+>그런데 DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에,  
+>IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
+> 
 >편리하게도 ipTIME에서 자체 DDNS 서비스를 제공한다.  
->나는 이 ipTIME DDNS를 구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 등록해서 고정IP 처럼 사용할 것이다. 
+>구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 ipTIME DDNS를 등록해서 고정IP 처럼 사용할 것이다. 
 
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 특수기능 - DDNS 설정
-3. 호스트이름과 사용자 ID 입력
-    - 외부IP 대신 도메인(`{호스트이름}.iptime.org`)으로 라즈베리파이에 접근할 수 있다. 
+3. 호스트이름과 사용자 ID 입력 후 생성
+    - 이제 외부IP 대신 도메인(`{호스트이름}.iptime.org`)으로 라즈베리파이에 접근할 수 있다. 
 
 ### 4.2. 포트포워딩 설정
 >외부에서 라즈베리파이의 IP 혹은 도메인과 지정된 포트로 접근했을 때, 연결시킬 내부 포트 설정
@@ -339,26 +349,26 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 1. ipTIME에서 설정한 DDNS 도메인(`go-quality.iptime.org`)을 구입한 도메인(`go-quality.dev`)의 CNAME으로 등록해서 고정IP 처럼 사용하려 했다.
 2. 하지만 정상적으로 접속되지 않았다.
-3. `go-quality.iptime.org`는 서브 도메인(www, 등)이 없는 Root domain인데, Root domain은 서브 도메인이 없으므로 CNAME 등록하면서 Host 부분에 와일드카드(* 또는 @)를 사용하면 된다고 생각했다.
-4. 알아보니 **Root domain은 CNAME으로 설정하지 않는 것이 표준([RFC 1912](https://tools.ietf.org/html/rfc1912), [RFC 2181](https://tools.ietf.org/html/rfc2181))이었다.**
-5. 이 표준은 기술적인 제약은 아니고 Contractual 제약이다. 그리고 내가 사용한 Namecheap이나 Godaddy에서는 표준을 따르고 있었다.
+3. `go-quality.iptime.org`는 서브 도메인(e.g. www)이 없는 Root domain인데, Root domain은 서브 도메인이 없으므로 CNAME 등록하면서 Host 부분에 와일드카드(* 또는 @)를 사용하면 된다고 생각했다.
+4. 알아보니 **Root domain은 CNAME으로 설정하지 않는 것이 표준([RFC 1912](https://tools.ietf.org/html/rfc1912), [RFC 2181](https://tools.ietf.org/html/rfc2181))** 이었다.
+5. 이 표준은 기술적인 제약은 아니고 Contractual 제약인데, Namecheap이나 Godaddy에서는 표준을 따르고 있었다.
 7. 그래서 서브도메인이 없는 Root domain을 CNAME으로 등록하는 방법을 구글링하다보니 `ANAME`, `ALIAS` 등의 방법을 제공하는 업체들이 있었다.
-8. Godaddy에서는 ANAME도 ALIAS도 제공하지 않았는데, 다행히 **Namecheap은 [ALIAS를 사용해서 CNAME 처럼 등록](https://www.namecheap.com/support/knowledgebase/article.aspx/10128/2237/how-to-create-an-alias-record)할 수 있었다.**
+8. Godaddy에서는 ANAME도 ALIAS도 제공하지 않았는데, 다행히 **Namecheap에서는 [ALIAS를 사용해서 CNAME 처럼 등록](https://www.namecheap.com/support/knowledgebase/article.aspx/10128/2237/how-to-create-an-alias-record)할 수 있었다.**
 9. 하지만 또 다시 정상적으로 접속되지 않았다.
-10. 알아보니 **`.dev` 도메인은 https 접속이 default인데, SSL 인증서를 세팅하지 않은 것이다.**
+10. 알아보니 **`.dev` 도메인은 https 접속이 default인데, SSL 인증서를 세팅하지 않은 것**이다.
 11. 우선 Alias로 등록한 Root domain이 CNAME 처럼 등록되었는지 먼저 테스트를 해보고 SSL 인증서를 세팅하기로 했다.
 12. 테스트를 위해 Godaddy에 등록된 도메인 중 `www.놀고있던도메인.com`을 Namecheap으로 옮겼다.
 13. 그리고 `www.놀고있던도메인.com` 도메인에 `go-quality.iptime.org`를 `ALIAS`로 설정했더니, CNAME 처럼 등록되었다.
 14. Alias 설정 후, `www.놀고있던도메인.com` 으로 접근하니 `go-quality.iptime.org`에 띄워둔 Nginx 랜딩페이지를 볼 수 있었다. (Alias 테스트 성공)
 15. 그 이후, SSL을 설정하고 `go-quality.dev`로 접근하니 아래 처럼 라즈베리파이에 실행중인 Nginx 랜딩페이지가 나타났다. (도메인 연결 성공)
-    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/nginx_index.png?raw=true" width="60%" height="60%">
+    
+    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/nginx_index.png?raw=true" width="60%" height="60%">
 
 
-### 6.2. SSL 설정
+### 6.2. SSL 인증서 생성 및 적용
 >[Let's Encrypt](https://letsencrypt.org/)를 사용해서 무료로 SSL 인증서를 세팅해본다.  
 >Let's Encrypt는 "전 세계 모든 사이트를 HTTPS로 만들기!” 라는 슬로건으로 시작 된 오픈소스 프로젝트이다.  
->3개월마다 인증서를 갱신해야 하지만, 쉘스크립트로 자동화할 수 있으니 문제없다.  
->certbot을 사용할 수 있지만
+>3개월마다 인증서를 갱신해야 하지만, 자동화할 수 있으니 문제없다.  
 
 1. 실행중인 Nginx 종료
     - letsencrypt가 80번 포트를 사용해서 인증을 시도하기 때문에 실행중인 nginx를 종료해야 한다.
@@ -381,17 +391,19 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - `$ certbot certificates` 명령으로 발급받은 인증서 목록 확인 
 5. Nginx에 인증서 적용
     - Nginx 설정 파일(`/etc/nginx/nginx.conf`)의 `http{ ... }` 안에 아래 내용을 추가한다.
-    ~~~conf
-    server {
-            listen 443 ssl default_server;
-            listen [::]:443 ssl default_server;
-            
-            ssl_certificate /etc/letsencrypt/live/{도메인명}/fullchain.pem;
-            ssl_certificate_key /etc/letsencrypt/live/{도메인명}/privkey.pem;
-            ssl_protocols   TLSv1 TLSv1.1 TLSv1.2;
-            ssl_ciphers     HIGH:!aNULL:!MD5;
-    }
-    ~~~
+    
+        ~~~
+        server {
+                listen 443 ssl default_server;
+                listen [::]:443 ssl default_server;
+                
+                ssl_certificate /etc/letsencrypt/live/{도메인명}/fullchain.pem;
+                ssl_certificate_key /etc/letsencrypt/live/{도메인명}/privkey.pem;
+                ssl_protocols   TLSv1 TLSv1.1 TLSv1.2;
+                ssl_ciphers     HIGH:!aNULL:!MD5;
+        }
+        ~~~
+        
 6. Nginx 시작 및 포트확인
     - `$ sudo service nginx start`
     - `$ netstat -ant`
@@ -402,7 +414,8 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - SSL을 적용했는데 브라우저의 주소창 왼쪽 자물쇠가 여전히 잠겨있지 않다면, [whynopadlock](https://www.whynopadlock.com)에서 문제점을 진단받아본다.
     - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/ssl_inspection.png?raw=true" width="60%" height="60%">
     
-- 참고 : [LETSENCRYPT 에서 SSL 인증서를 무료로 발급 받아 웹 서버에 적용하기](https://kr.minibrary.com/353/)
+
+참고 : [LETSENCRYPT 에서 SSL 인증서를 무료로 발급 받아 웹 서버에 적용하기](https://kr.minibrary.com/353/)
 
 ### 6.3. SSL 인증서 자동갱신 설정
 >30일 마다 라즈베리파이에 접속해서 `$ certbot renew`를 입력하는 것은 귀찮다.  
@@ -418,18 +431,18 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - `$ sudo cron -e`
     - 아래 내용 추가 후 저장  
     
-    ~~~sh
-    # 매월 1일 새벽4시에 $ certbot renew 명령을 내리고, 갱신에 성공하면 nginx reload
-    0 04 1 * * /usr/bin/certbot renew --renew-hook="sudo systemctl reload nginx"
-    ~~~
+        ~~~sh
+        # 매월 1일 새벽4시에 $ certbot renew 명령을 내리고, 갱신에 성공하면 nginx reload
+        0 04 1 * * /usr/bin/certbot renew --renew-hook="sudo systemctl reload nginx"
+        ~~~
     
 5. Crontab 실행 로그 확인
     - 갱신이 제대로 이루어지는지 로그로 확인한다.
     - `$ view /var/log/syslog`
 
-- 참고
-    - [Let's Encrypt SSL 인증서 자동 갱신 설정 방법](https://devlog.jwgo.kr/2019/04/16/how-to-lets-encrypt-ssl-renew/)
-    - [SSL 인증서 자동 갱신 오류](https://avada.tistory.com/481)
+참고
+  - [Let's Encrypt SSL 인증서 자동 갱신 설정 방법](https://devlog.jwgo.kr/2019/04/16/how-to-lets-encrypt-ssl-renew/)
+  - [SSL 인증서 자동 갱신 오류](https://avada.tistory.com/481)
 
 
 ## 7. 기타
@@ -453,8 +466,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     echo Temperature CPU : $cpuTemp1"."$cpuTempM"'C, GPU : "$gpuTemp
     ~~~
 3. 라즈베리파이 온도 확인
+    - `$ ./thermometer.sh`
 
-- 참고 : [라즈베리파이 시스템 온도(발열) 확인](https://geeksvoyage.com/raspberry%20pi/get-temp-for-pi/)
+참고 : [라즈베리파이 시스템 온도(발열) 확인](https://geeksvoyage.com/raspberry%20pi/get-temp-for-pi/)
 
 
 ## Reference
