@@ -1,7 +1,13 @@
-# :strawberry:라즈베리파이4로 개인서버 만들기
->토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.
+# :strawberry:라즈베리파이4로 토이프로젝트용 서버 만들기 - 1편
+>토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.  
+>크게 3단계로 작업을 진행할 예정이다.  
+>1편 - 라즈베리파이4를 서버로 만들기  
+>2편 - 웹 어플리케이션 배포  
+>3편 - 도커라이징
+
 
 ## 0. 목차
+
 1. **재료 준비 및 시작**  
   1.0. 구입한 제품들  
   1.1. 전원 연결  
@@ -16,11 +22,34 @@
 3. **기본 환경 설정**  
   3.0. 설정 도구 실행  
   3.1. 비밀번호 변경  
-  3.2. Locale, Timezone, Keyboard, Wi-fi Country 설정  
-  3.3. SSH 허용  
+  3.2. Locale 설정  
+  3.3. Timezone 설정  
+  3.4. Keyboard Layout 설정  
+  3.5. Wi-fi Country 설정  
+  3.6. Wi-fi 설정 (raspi-config 사용)
+  3.7. Wi-fi 설정 (wpa_passphrase 사용)
+  3.8. SSH 허용 및 접속
   3.4. Hostname, Wi-fi 설정
 
----
+4. **네트워크 설정**
+  4.0. 내부IP 고정
+  4.1. DDNS 설정
+  4.2. 포트포워딩 설정
+  4.3. ipTIME 원격접속 허용
+
+5. **Nginx 설치 및 설정**
+  5.0. Nginx 설치
+  5.1. 한글 폰트 및 입력기 설치
+  5.2 Nginx 문자셋 설정
+
+6. **도메인, SSL 설정**
+  6.0. 도메인 구입
+  6.1. 도메인 연결
+  6.2. SSL 설정
+  6.3. SSL 인증서 자동갱신 설정
+  
+7. **기타**
+  7.0. 온도 측정용 쉘 스크립트 작성
 
 ## 1. 재료 준비 및 시작
 >구입할 당시에 한국에 라즈베리파이4 판매처가 아예 없어서, 미국에 사는 처남에게 부탁해서 제품을 구매했다.  
@@ -123,24 +152,24 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 2. 초기 비밀번호를 사용해도 되지만, 라즈베리파이를 분실했을 경우를 고려하면 바꾸는 것이 마음 편하다.
 3. (주의) 키보드 설정을 하기 전에는 !@#$%^&* 등의 문자를 사용하지 않는 비밀번호를 사용한다.
 
-### 3.2. Locale 변경
+### 3.2. Locale 설정
 1. `4. Localisation Options` -> `I1 Change Locale` 클릭
 2. 쭉 내려가서 `[*] en_US.UTF-8 UTF-8` 선택 (스페이스바 사용) 후 OK
     - `ko_KR.UTF-8 UTF-8`을 사용하면 에러 메세지로 구글링하기가 더 어려워서 미국으로 선택했다.
 3. Default locale for the system environment 를 묻는 화면에서 `en.US.UTF-8` 선택 후 OK
 
-### 3.3. Timezone 변경
+### 3.3. Timezone 설정
 1. `4. Localisation Options` -> `I2 Change Timezone` 클릭
 2. Asia 선택, Seoul 선택
     - 서버 시간을 그리니치 표준시(GMT+0) 또는 협정 세계시(UTC+0)로 맞추려면 London을 선택한다.
 
-### 3.4. Keyboard Layout 변경
+### 3.4. Keyboard Layout 설정
 1. `4. Localisation Options` -> `I3 Change Keyboard Layout` 클릭
 2. [자세히 설명된 글](https://dullwolf.tistory.com/17)을 참고하여 키보드를 설정한다.
 3. 설정하지 않으면 !@#$%^&*() 등의 Shift+숫자키로 사용하는 키를 사용할 수 없다고 한다.
 4. ~~해피해킹도 선택지에 있어서 기뻤다.~~
 
-### 3.5. Wi-fi Country 변경  
+### 3.5. Wi-fi Country 설정 
 >(주의) 반드시 변경해야 되는 것은 아니다.  
 >변경할 경우 `/etc/wpa_supplicant/wpa_supplicant.conf` 파일에 `country={국가코드}`가 작성되는데, 이것이 없어야만 무선 네트워크가 검색되는 경우도 있다고 한다.
 
@@ -205,7 +234,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - (주의) network 윗부분의 내용도 반드시 포함되어야 한다.
     - 비밀번호가 노출된 `#psk="{비밀번호}"`는 지우는 것이 좋다.
     
-### 3.7. SSH 허용 및 접속
+### 3.8. SSH 허용 및 접속
 >~~시력 보호를 위해~~ 라즈베리파이에 SSH로 원격 접속해서 사용하는 것이 훨씬 편리하다.  
 >SSH 접속을 허용하면 모니터와 키보드를 연결할 필요 없이,  
 >PC/랩탑에서 SSH를 통해 라즈베리파이에 접속하면 된다. (마치 AWS EC2 인스턴스가 내 책상에..)
@@ -216,9 +245,13 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - 무선랜의 경우, `wlan0` 의 `inet addr: xxx.xx.x.xx`에 적힌 IP 확인 (유선은 eth0)
 3. SSH 접속
     - (내부망) 주로 사용하는 PC/랩탑에서 `$ ssh pi@{내부IP 주소}`로 접속
-    - (외부망) 밑에서 설명한 포트포워딩 설정 후 `$ ssh -p {외부포트} pi@{외부IP 주소}`로 접속
-
-
+    - (외부망) 밑에서 설명한 포트포워딩 설정 후 `$ ssh -p {외부포트} pi@{외부IP주소 혹은 도메인명}`로 접속
+4. SSH 끊김 현상 해결
+    - ssh 접속하여 사용하다보면 끊기는 듯한 현상이 있는데, DNS 조회 설정 변경으로 이를 해결할 수 있다.
+    - `$ sudo vi /etc/ssh/sshd_config` 명령으로 설정파일에 접근.
+    - 파일 하단 쯤에 주석처리 되어있는 `#UseDNS no`의 주석(#)을 해제.
+    - `$ sudo service ssh restart` 명령으로 sshd 재시작.
+    - 참고 : [Slow SSH on RPi 3](https://www.raspberrypi.org/forums/viewtopic.php?t=180440)
 
 
 ## 4. 네트워크 설정
@@ -226,9 +259,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 >ipTIME A3004NS-M 모델 (펌웨어 버전 11.00.4) 기준으로 작성했다.
 
 
-### 4.1. 내부IP 고정
+### 4.0. 내부IP 고정
 >공유기를 통해 wi-fi를 사용하는 기기들에게 공유기는 임의로 내부IP(사설IP)를 할당한다.  
->ipTIME의 경우 맥북은 192.168.0.2, 휴대폰은 192.168.0.3, 라즈베리파이는 192.168.0.4 이런식이다.  
+>기기를 wi-fi에 연결한 순서에 따라, 맥북은 192.168.0.2, 휴대폰은 192.168.0.3, 라즈베리파이는 192.168.0.4 이런식이다.  
 >그런데 공유기에 전원이 차단되어 공유기가 재부팅되는 경우 등으로 인해 내부 IP 설정이 초기화 될 수 있다.  
 >이런 상황을 대비해서 내부 IP를 공유기 내에서 고정시키는 것이 좋다.
 
@@ -237,20 +270,20 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼 클릭.
     <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/iptime01.png?raw=true" width="60%" height="60%">
 
-### 4.2. DDNS 설정
+### 4.1. DDNS 설정
 >ISP 사업자(우리집은 KT)는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 우리집에 유동 IP를 할당해준다.   
->그런데 ISP 사업자가 DHCP 서버를 리셋하거나, 어떤 수작을 부리면 우리집에 할당되었던 IP가 변경된다. (그래서 가정집은 유동IP다.)  
+>유동IP라도 IP가 자주 바뀌지는 않는다. 하지만 ISP 사업자가 DHCP 서버를 리셋하는 등의 수작을 부리면 우리집에 할당되었던 IP가 변경된다. (그래서 가정집은 유동IP다.)  
 >이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에, A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
->DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에, IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
->그런데 ipTIME에서 자체 DDNS 서비스를 제공한다.  
->추후에 이 ipTIME DDNS 구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 등록해서 고정IP 처럼 사용할 것이다. 
+>그런데 DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에, IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
+>편리하게도 ipTIME에서 자체 DDNS 서비스를 제공한다.  
+>나는 이 ipTIME DDNS를 구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 등록해서 고정IP 처럼 사용할 것이다. 
 
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 특수기능 - DDNS 설정
 3. 호스트이름과 사용자 ID 입력
-    - 외부IP 대신 도메인(스러운) {호스트이름}.iptime.org로 라즈베리파이에 접근할 수 있다. 
+    - 외부IP 대신 도메인(`{호스트이름}.iptime.org`)으로 라즈베리파이에 접근할 수 있다. 
 
-### 4.3. 포트포워딩 설정
+### 4.2. 포트포워딩 설정
 >외부에서 라즈베리파이의 IP 혹은 도메인과 지정된 포트로 접근했을 때, 연결시킬 내부 포트 설정
 
 1. ipTIME 접속 (192.168.0.1)
@@ -261,9 +294,10 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - 프로토콜: TCP
     - 외부 포트: 예시- 20000(ssh), 443(https), 80(http)
     - 내부 포트: 22(ssh), 443(https), 80(http) 등
-      - [http의 기본 포트가 80, https의 기본 포트가 443인 이유는 무엇일까?](https://johngrib.github.io/wiki/why-http-80-https-443/) 
 
-### 4.4. ipTIME 원격 접속 허용
+참고 : [http의 기본 포트가 80, https의 기본 포트가 443인 이유는 무엇일까?](https://johngrib.github.io/wiki/why-http-80-https-443/) 
+
+### 4.3. ipTIME 원격접속 허용
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 보안기능 - 공유기 접속/보안관리
 3. 원격 관리 포트 사용 체크 및 원하는 포트번호 설정
@@ -272,12 +306,13 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 
 ## 5. Nginx 설치 및 설정
+>한글 폰트와 문자셋 설정은 당장 필요하지 않지만 해두었다.
 
-### 5.1. Nginx 설치
+### 5.0. Nginx 설치
 1. `$ sudo apt-get update`
 2. `$ sudo apt-get install nginx`
 
-### 5.1 한글 폰트 및 입력기 설치
+### 5.1. 한글 폰트 및 입력기 설치
 - `$ sudo apt-get install fonts-unfonts-core`
 - `$ sudo apt-get install ibus-hangul`
 
@@ -293,41 +328,112 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   
 ## 6. 도메인, SSL 설정
 
-### 6.1. 도메인 구입
+### 6.0. 도메인 구입
 >블로그 도메인을 Godaddy에서 구입했었는데, 비싸다.  
->구글링 결과 Namecheap가 평가가 훨씬 좋아서 선택했다.  
+>구글링 결과 Namecheap의 평가가 훨씬 좋아서 선택했다.  
 >그리고 Godaddy는 ANAME이나 Alias를 제공하지 않아서 기존에 있던 도메인도 Namecheap으로 이전했다.
 
-### 6.2. 도메인 연결
+### 6.1. 도메인 연결
 >이 부분에서 삽질을 많이 했다. 아래에 삽질 과정을 요약했다.
 
-1. ipTIME에서 설정한 DDNS 도메인(go-quality.iptime.org)을 구입한 도메인(go-quality.dev)의 CNAME으로 등록해서 고정IP 처럼 사용하려 했다.
-2. 그런데 `go-quality.iptime.org`는 서브 도메인(www. 등등)이 없는 Root domain이다.
-3. Root domain은 서브 도메인이 없으므로 CNAME 등록하면서 Host 부분에 와일드카드(* 또는 @)를 사용하면 된다고 생각했다.
-4. 하지만 정상적으로 접속되지 않았다.
-5. 알아보니 Root domain은 CNAME으로 설정하지 않는 것이 표준([RFC 1912](https://tools.ietf.org/html/rfc1912), [RFC 2181](https://tools.ietf.org/html/rfc2181))이었다.
-6. 이 표준은 기술적인 제약은 아니고 Contractual(계약상의) 제약이다. 하지만 Namecheap이나 Godaddy에서는 표준을 따르고 있었다.
-7. Root domain을 CNAME으로 등록하는 방법을 구글링하다보니 `ANAME`, `ALIAS` 등의 방법을 알게 되었다.
-8. Godaddy에서는 ANAME도 ALIAS도 제공하지 않았는데, 다행히 Namecheap은 ALIAS를 사용해서 CNAME 처럼 등록할 수 있었다.
-9. 하지만 정상적으로 접속되지 않았다.
-10. 알아보니 `.dev` 도메인은 https 접속이 default인데, SSL 인증서를 세팅하지 않은 것이다.
-11. 우선 Root domain을 CNAME 처럼 등록할 수 있는지 먼저 테스트를 해보고 SSL 인증서를 세팅하기로 했다.
-12. Godaddy에 등록된 도메인 중 놀고 있는 도메인을 Namecheap으로 옮겼다.
-13. 옮긴 도메인에 `go-quality.iptime.org`를 `ALIAS`로 설정했더니, CNAME 처럼 등록되었다.
-14. `www.놀고있던도메인.com` 으로 접근하니 `go-quality.iptime.org`에 띄워둔 Nginx 랜딩페이지를 볼 수 있었다. (성공)
+1. ipTIME에서 설정한 DDNS 도메인(`go-quality.iptime.org`)을 구입한 도메인(`go-quality.dev`)의 CNAME으로 등록해서 고정IP 처럼 사용하려 했다.
+2. 하지만 정상적으로 접속되지 않았다.
+3. `go-quality.iptime.org`는 서브 도메인(www, 등)이 없는 Root domain인데, Root domain은 서브 도메인이 없으므로 CNAME 등록하면서 Host 부분에 와일드카드(* 또는 @)를 사용하면 된다고 생각했다.
+4. 알아보니 **Root domain은 CNAME으로 설정하지 않는 것이 표준([RFC 1912](https://tools.ietf.org/html/rfc1912), [RFC 2181](https://tools.ietf.org/html/rfc2181))이었다.**
+5. 이 표준은 기술적인 제약은 아니고 Contractual 제약이다. 그리고 내가 사용한 Namecheap이나 Godaddy에서는 표준을 따르고 있었다.
+7. 그래서 서브도메인이 없는 Root domain을 CNAME으로 등록하는 방법을 구글링하다보니 `ANAME`, `ALIAS` 등의 방법을 제공하는 업체들이 있었다.
+8. Godaddy에서는 ANAME도 ALIAS도 제공하지 않았는데, 다행히 **Namecheap은 [ALIAS를 사용해서 CNAME 처럼 등록](https://www.namecheap.com/support/knowledgebase/article.aspx/10128/2237/how-to-create-an-alias-record)할 수 있었다.**
+9. 하지만 또 다시 정상적으로 접속되지 않았다.
+10. 알아보니 **`.dev` 도메인은 https 접속이 default인데, SSL 인증서를 세팅하지 않은 것이다.**
+11. 우선 Alias로 등록한 Root domain이 CNAME 처럼 등록되었는지 먼저 테스트를 해보고 SSL 인증서를 세팅하기로 했다.
+12. 테스트를 위해 Godaddy에 등록된 도메인 중 `www.놀고있던도메인.com`을 Namecheap으로 옮겼다.
+13. 그리고 `www.놀고있던도메인.com` 도메인에 `go-quality.iptime.org`를 `ALIAS`로 설정했더니, CNAME 처럼 등록되었다.
+14. Alias 설정 후, `www.놀고있던도메인.com` 으로 접근하니 `go-quality.iptime.org`에 띄워둔 Nginx 랜딩페이지를 볼 수 있었다. (Alias 테스트 성공)
+15. 그 이후, SSL을 설정하고 `go-quality.dev`로 접근하니 아래 처럼 라즈베리파이에 실행중인 Nginx 랜딩페이지가 나타났다. (도메인 연결 성공)
+    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/nginx_index.png?raw=true" width="60%" height="60%">
+
 
 ### 6.2. SSL 설정
+>[Let's Encrypt](https://letsencrypt.org/)를 사용해서 무료로 SSL 인증서를 세팅해본다.  
+>Let's Encrypt는 "전 세계 모든 사이트를 HTTPS로 만들기!” 라는 슬로건으로 시작 된 오픈소스 프로젝트이다.  
+>3개월마다 인증서를 갱신해야 하지만, 쉘스크립트로 자동화할 수 있으니 문제없다.  
+>certbot을 사용할 수 있지만
 
-1. 실행중인 nginx 종료
-    - letsencrypt가 80번 포트를 사용해서 인증을 시도하기 때문
-    - `$ sudo service nginx stop`
-2. `$ sudo apt install letsencrypt`
-3. `sudo letsencrypt certonly --standalone -d go-quality.iptime.org`
-4. 결과
-    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/certbot.png?raw=true" width="60%" height="60%">
+1. 실행중인 Nginx 종료
+    - letsencrypt가 80번 포트를 사용해서 인증을 시도하기 때문에 실행중인 nginx를 종료해야 한다.
+        - `$ sudo service nginx stop`
+    - 80번 포트가 사용되지 않는 것을 확인한다.
+        - `$ netstat -ant`
+2. 라즈베리파이에 letsencrypt를 설치한다.
+    - `$ sudo apt install letsencrypt`
+3. 인증서 생성
+    - `sudo letsencrypt certonly --standalone -d go-quality.dev`
+4. 인증서 생성 결과 확인
+    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/certbot.png?raw=true" width="60%" height="60%">
+    - 위의 결과를 요약하자면,
+        - 인증서와 키 파일이 각각 아래 경로에 저장되었다.
+          - `/etc/letsencrypt/live/go-quality.dev/fullchain.pem`
+          - `/etc/letsencrypt/live/go-quality.dev/privkey.pem`
+        - 인증서는 2020년 2월 21일에 만료되고, `$ certbot renew` 명령을 통해 갱신할 수 있다.
+        - Certbot 설정 디렉토리(/etc/letsencrypt)에 너의 계정 credential과 인증서, 그리고 private key가 저장되었으니, 안전한 백업폴더를 생성하는 것이 좋다.
+        - Certbot에 기부좀 해줘. 
+    - `$ certbot certificates` 명령으로 발급받은 인증서 목록 확인 
+5. Nginx에 인증서 적용
+    - Nginx 설정 파일(`/etc/nginx/nginx.conf`)의 `http{ ... }` 안에 아래 내용을 추가한다.
+    ~~~conf
+    server {
+            listen 443 ssl default_server;
+            listen [::]:443 ssl default_server;
+            
+            ssl_certificate /etc/letsencrypt/live/{도메인명}/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/{도메인명}/privkey.pem;
+            ssl_protocols   TLSv1 TLSv1.1 TLSv1.2;
+            ssl_ciphers     HIGH:!aNULL:!MD5;
+    }
+    ~~~
+6. Nginx 시작 및 포트확인
+    - `$ sudo service nginx start`
+    - `$ netstat -ant`
+      - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/ssl_443.png?raw=true" width="60%" height="60%">
+      - 443 포트 listening을 확인한다.
+        
+7. SSL 적용 확인
+    - SSL을 적용했는데 브라우저의 주소창 왼쪽 자물쇠가 여전히 잠겨있지 않다면, [whynopadlock](https://www.whynopadlock.com)에서 문제점을 진단받아본다.
+    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/ssl_inspection.png?raw=true" width="60%" height="60%">
     
+- 참고 : [LETSENCRYPT 에서 SSL 인증서를 무료로 발급 받아 웹 서버에 적용하기](https://kr.minibrary.com/353/)
 
-### 3.9. 온도 측정용 쉘 스크립트 작성
+### 6.3. SSL 인증서 자동갱신 설정
+>30일 마다 라즈베리파이에 접속해서 `$ certbot renew`를 입력하는 것은 귀찮다.  
+>Crontab으로 인증서 갱신을 자동화 한다.
+
+1. 인증서 만료일 확인
+    - `$ certbot certificates` 명령으로 Expiry Date 확인
+2. 시스템 시간 확인
+    - `$ date`
+3. 기존에 설정된 Crontab 확인
+    - `$ sudo cron -l`
+4. Crontab 편집
+    - `$ sudo cron -e`
+    - 아래 내용 추가 후 저장  
+    
+    ~~~sh
+    # 매월 1일 새벽4시에 $ certbot renew 명령을 내리고, 갱신에 성공하면 nginx reload
+    0 04 1 * * /usr/bin/certbot renew --renew-hook="sudo systemctl reload nginx"
+    ~~~
+    
+5. Crontab 실행 로그 확인
+    - 갱신이 제대로 이루어지는지 로그로 확인한다.
+    - `$ view /var/log/syslog`
+
+- 참고
+    - [Let's Encrypt SSL 인증서 자동 갱신 설정 방법](https://devlog.jwgo.kr/2019/04/16/how-to-lets-encrypt-ssl-renew/)
+    - [SSL 인증서 자동 갱신 오류](https://avada.tistory.com/481)
+
+
+## 7. 기타
+
+### 7.0. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
     - `$ sudo vim thermometer.sh`
 2. 쉘 스크립트 작성
@@ -345,7 +451,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     echo $(date "+%Y-%m-%d %H:%M")
     echo Temperature CPU : $cpuTemp1"."$cpuTempM"'C, GPU : "$gpuTemp
     ~~~
-    - 참고 : [라즈베리파이 시스템 온도(발열) 확인](https://geeksvoyage.com/raspberry%20pi/get-temp-for-pi/)
+3. 라즈베리파이 온도 확인
+
+- 참고 : [라즈베리파이 시스템 온도(발열) 확인](https://geeksvoyage.com/raspberry%20pi/get-temp-for-pi/)
 
 
 ## Reference
