@@ -1,8 +1,10 @@
 # :strawberry:라즈베리파이4로 토이프로젝트용 서버 만들기 - 1편
->토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.  
+
+#### 토이프로젝트를 올릴 서버를 2019년 7월에 새로 출시한 라즈베리파이4로 만들어 보았다.  
+
 >크게 3단계로 작업을 진행할 예정이다.  
 >  
->1편 - 라즈베리파이4를 서버로 만들기  
+>***1편 - 라즈베리파이4를 서버로 만들기***  
 >2편 - 웹 어플리케이션 배포  
 >3편 - 도커라이징
 
@@ -54,7 +56,7 @@
 
 -----
 
-## 1. 재료 준비 및 시작
+# 1. 재료 준비 및 시작
 >구입할 당시에 한국에 라즈베리파이4 판매처가 아예 없어서, 미국에 사는 처남에게 부탁해서 제품을 구매했다.  
 >구글링을 꽤 해보고 리뷰들도 읽어 본 후에 구매한 제품들이지만, 최고의 선택이 아닐 수도 있다.  
 >(제품 홍보 절대 아님!) 
@@ -82,8 +84,8 @@
     - 3.3v(low speed)의 위치는 위의 링크에서 1번(빨간선), 6번(검정선)
     - 5v(high speed)의 위치는 4번(빨간선), 6번(검정선)
 3. 전원을 연결하면 빨간불과 녹색불이 켜지고, 팬이 돌아간다.
-
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
+    
+    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
 
 ### 1.2. 안전하게 종료하기
 - 처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.
@@ -97,7 +99,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   5. 이제 전원코드를 뽑아도 된다.
   6. 다시 부팅하려면 전원코드를 연결하면 된다.
 
-## 2. OS 설치
+# 2. OS 설치
 >[다른 선택지들](https://www.raspberrypi.org/downloads/)도 있지만, 첫 경험이므로 얌전하게 공식 OS인 Raspbian을 설치한다.
 
 ### 2.0. Raspbian 설치 방법 선택
@@ -141,7 +143,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 5. 초기 아이디는 `pi`, 비밀번호는 `raspberry` 
 
 
-## 3. 기본 환경 설정
+# 3. 기본 환경 설정
 >Raspbian Lite 버전을 기준으로 서버로 활용하기 위한 기본 환경을 설정한다.
 
 ### 3.0. 설정 도구 실행
@@ -219,6 +221,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 2. 출력된 network 정보를 설정 파일(/etc/wpa_supplicant/wpa_supplicant.conf)에 추가한다.
     - 이 때, 마우스가 없으니 출력될 정보를 Redirecting output(>>)으로 설정 파일에 넣는다.  
     - [라즈베리파이 공식 문서](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)에 자세하게 설명되어있다. 
+    
     ~~~sh
     $ sudo su  # root 권한으로 변경
     $ wpa_passphrase {SSID} {비밀번호} >> /etc/wpa_supplicant/wpa_supplicant.conf
@@ -240,8 +243,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     
 ### 3.8. SSH 허용 및 접속
 >~~시력 보호를 위해~~ 라즈베리파이에 SSH로 원격 접속해서 사용하는 것이 훨씬 편리하다.  
->SSH 접속을 허용하면 모니터와 키보드를 연결할 필요 없이,  
+>SSH 접속을 허용하면 라즈베리파이에 모니터와 키보드를 연결할 필요 없이,  
 >PC/랩탑에서 SSH를 통해 라즈베리파이에 접속하면 된다. (마치 AWS EC2 인스턴스가 내 책상에..)
+
 1. SSH 허용
     - `5. Interfacing Options` -> `P2 SSH` -> `YES`
 2. 라즈베리파이 IP 확인
@@ -250,15 +254,13 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 3. SSH 접속
     - (내부망) 주로 사용하는 PC/랩탑에서 `$ ssh pi@{내부IP 주소}`로 접속
     - (외부망) 밑에서 설명한 포트포워딩 설정 후 `$ ssh -p {외부포트} pi@{외부IP주소 혹은 도메인명}`로 접속
-4. SSH 끊김 현상 해결
-    - ssh 접속하여 사용하다보면 끊기는 듯한 현상이 있는데, DNS 조회 설정 변경으로 이를 해결할 수 있다.
+4. 느린 SSH 로그인 문제 해결
+    - 가끔 ssh 로그인 시도를 하면 엄청 느리게 응답이 오는 현상이 있는데, DNS 조회 설정 변경으로 이를 해결할 수 있다.
     - `$ sudo vi /etc/ssh/sshd_config` 명령으로 설정파일에 접근.
     - 파일 하단 쯤에 주석처리 되어있는 `#UseDNS no`의 주석(#)을 해제.
     - `$ sudo service ssh restart` 명령으로 sshd 재시작.
-    - 참고 : [Slow SSH on RPi 3](https://www.raspberrypi.org/forums/viewtopic.php?t=180440)
 
-
-## 4. 네트워크 설정
+# 4. 네트워크 설정
 >이 부분은 사용하는 공유기에 따라 설정 방법이 다르다.  
 >ipTIME A3004NS-M 모델 (펌웨어 버전 11.00.4) 기준으로 작성했다.
 
@@ -280,14 +282,13 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 >   
 >유동IP라도 IP가 자주 바뀌지는 않는다.  
 >하지만 ISP 사업자가 DHCP 서버를 리셋하는 등의 수작을 부리면 우리집에 할당되었던 IP가 변경된다.  
->이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에,  
->A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
+>이 경우 DNS에 등록한 A 레코드(IP주소)가 변경된 것이기 때문에, A 레코드를 새로운 IP로 변경하여 도메인이 새 IP를 바라보게 해야한다.  
 >  
 >그런데 DDNS 서비스를 사용하면 A레코드의 변경을 감지해서 자동으로 업데이트 해주기 때문에,  
 >IP 변경에 신경 쓸 필요없이 고정IP 처럼 사용할 수 있다.  
 > 
 >편리하게도 ipTIME에서 자체 DDNS 서비스를 제공한다.  
->구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 ipTIME DDNS를 등록해서 고정IP 처럼 사용할 것이다. 
+>구입한 도메인의 CNAME(혹은 ANAME, 혹은 Alias)으로 ipTIME DDNS를 등록해서 고정IP 처럼 사용할 예정이다. 
 
 1. ipTIME 접속 (192.168.0.1)
 2. 고급설정 - 특수기능 - DDNS 설정
@@ -316,7 +317,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - (예시) 1nteger.iptime.org:22000 
 
 
-## 5. Nginx 설치 및 설정
+# 5. Nginx 설치 및 설정
 >한글 폰트와 문자셋 설정은 당장 필요하지 않지만 해두었다.
 
 ### 5.0. Nginx 설치
@@ -337,7 +338,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   }
   ~~~
   
-## 6. 도메인, SSL 설정
+# 6. 도메인, SSL 설정
 
 ### 6.0. 도메인 구입
 >블로그 도메인을 Godaddy에서 구입했었는데, 비싸다.  
@@ -388,11 +389,12 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
         - 인증서는 2020년 2월 21일에 만료되고, `$ certbot renew` 명령을 통해 갱신할 수 있다.
         - Certbot 설정 디렉토리(/etc/letsencrypt)에 너의 계정 credential과 인증서, 그리고 private key가 저장되었으니, 안전한 백업폴더를 생성하는 것이 좋다.
         - Certbot에 기부좀 해줘. 
-    - `$ certbot certificates` 명령으로 발급받은 인증서 목록 확인 
+    - `$ certbot certificates` 명령으로 발급받은 인증서 목록 확인
+     
 5. Nginx에 인증서 적용
     - Nginx 설정 파일(`/etc/nginx/nginx.conf`)의 `http{ ... }` 안에 아래 내용을 추가한다.
     
-        ~~~
+        ~~~sh
         server {
                 listen 443 ssl default_server;
                 listen [::]:443 ssl default_server;
@@ -445,7 +447,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
   - [SSL 인증서 자동 갱신 오류](https://avada.tistory.com/481)
 
 
-## 7. 기타
+# 7. 기타
 
 ### 7.0. 온도 측정용 쉘 스크립트 작성
 1. 쉘 스크립트 파일 생성
@@ -470,7 +472,12 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 
 참고 : [라즈베리파이 시스템 온도(발열) 확인](https://geeksvoyage.com/raspberry%20pi/get-temp-for-pi/)
 
+</br>
 
+# 1편 끝.
+>2편은 Spring boot 어플리케이션을 라즈베리파이에 배포하는 과정을 정리할 예정이다.
+
+</br>
 ## Reference
 - https://brunch.co.kr/@topasvga/701
 - https://geeksvoyage.com/
