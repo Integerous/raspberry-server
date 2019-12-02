@@ -63,7 +63,7 @@
 
 ### 1.0. 구입한 제품들
 
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/whole_mini.png?raw=true" width="60%" height="60%">
+<img src="https://github.com/Integerous/raspberry-server/blob/master/images/whole_mini.png?raw=true" width="600">
 
 1. **Raspberry Pi 4 보드** ([링크](https://www.canakit.com/raspberry-pi-4-4gb.html))
 2. **USB C Type 충전기 (5V 3A)** ([링크](http://innomart.co.kr/goods/view?no=2030&market=naver&NaPm=ct%3Dk03ya1kw%7Cci%3Dfba2d08e22dc9f7d8922a9fcb37344b17954e7bc%7Ctr%3Dsls%7Csn%3D244253%7Chk%3D28ee28dec6817eca0cb3c06acab11b1450612912))
@@ -85,7 +85,8 @@
     - 5v(high speed)의 위치는 4번(빨간선), 6번(검정선)
 3. 전원을 연결하면 빨간불과 녹색불이 켜지고, 팬이 돌아간다.
     
-    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/power_on.png?raw=true" width="60%" height="60%">
+    <img src="https://github.com/Integerous/raspberry-server/blob/master/images/power_on.png?raw=true" width="600">
+    
 
 ### 1.2. 안전하게 종료하기
 - 처음에는 라즈베리파이의 전원코드를 뽑는 방법으로 종료를 해왔는데, 위험한 방법이었다.
@@ -122,7 +123,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 - [이 곳](https://www.raspberrypi.org/downloads/raspbian/)에서 Raspbian 이미지를 다운로드 받는다.
 - 나는 서버로만 사용할 예정이기 때문에 Desktop GUI가 없지만 리소스 소모가 적은 Lite 버전을 선택했다.
 
-<img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspbian.png?raw=true">
+<img src="https://github.com/Integerous/raspberry-server/blob/master/images/raspbian.png?raw=true">
 
 
 ### 2.2. SD카드에 Raspbian 이미지 굽기
@@ -133,7 +134,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - Etcher 사용법은 간단하다.
     - 이미지를 선택하고, SD카드를 선택하고, Flash(굽기)!
       - 이 때, 다운받은 Raspbian OS 이미지가 zip 파일일텐데, 압축을 풀 필요없이 그대로 사용하면 된다. 
-    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/etcher1.png?raw=true" width="60%" height="60%">  
+    <img src="https://github.com/Integerous/raspberry-server/blob/master/images/etcher1.png?raw=true" width="600">  
 
 ### 2.3. 라즈베리파이에 OS 설치
 1. Rasbian 이미지가 구워진 SD카드를 라즈베리파이에 삽입한다.
@@ -150,7 +151,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 1. `$ sudo raspi-config` 명령을 통해 라즈베리파이 설정 도구(Raspberry Pi Software Configuration Tool)를 실행한다.  
 2. 그럼 아래와 같이 ~~블루라이트 차단 안경을 무력화하는~~ 새파란 설정 도구가 실행된다.
    
-  <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/raspberry_config.png?raw=true" width="60%" height="60%">
+  <img src="https://github.com/Integerous/raspberry-server/blob/master/images/raspberry_config.png?raw=true" width="600">
 
 ### 3.1. 비밀번호 변경
 1. `1. Change User Password`를 선택하여 비밀번호를 변경한다.    
@@ -275,7 +276,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 2. 고급설정 - 네트워크 관리 - DHCP 서버 설정
 3. 하단에 [사용중인 IP 주소 정보] 중 라즈베리파이의 체크박스를 클릭하고 위에 등록 버튼 클릭.
     
-    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/iptime01.png?raw=true" width="60%" height="60%">
+    <img src="https://github.com/Integerous/raspberry-server/blob/master/images/iptime01.png?raw=true" width="600">
 
 ### 4.1. DDNS 설정
 >ISP 사업자(KT, SKT 등)는 DHCP(동적 호스트를 제공하는 프로토콜)를 통해 가정집에 유동 IP를 할당해준다.  
@@ -363,7 +364,7 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 14. Alias 설정 후, `www.놀고있던도메인.com` 으로 접근하니 `go-quality.iptime.org`에 띄워둔 Nginx 랜딩페이지를 볼 수 있었다. (Alias 테스트 성공)
 15. 그 이후, SSL을 설정하고 `go-quality.dev`로 접근하니 아래 처럼 라즈베리파이에 실행중인 Nginx 랜딩페이지가 나타났다. (도메인 연결 성공)
     
-    <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/nginx_index.png?raw=true" width="60%" height="60%">
+    <img src="https://github.com/Integerous/raspberry-server/blob/master/images/nginx_index.png?raw=true" width="600">
 
 
 ### 6.2. SSL 인증서 생성 및 적용
@@ -380,8 +381,8 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
     - `$ sudo apt install letsencrypt`
 3. 인증서 생성
     - `sudo letsencrypt certonly --standalone -d go-quality.dev`
-4. 인증서 생성 결과 확인
-    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/certbot.png?raw=true" width="60%" height="60%">
+4. 인증서 생성 결과 확인  
+    - <img src="https://github.com/Integerous/raspberry-server/blob/master/images/certbot.png?raw=true" width="600">
     - 위의 결과를 요약하자면,
         - 인증서와 키 파일이 각각 아래 경로에 저장되었다.
           - `/etc/letsencrypt/live/go-quality.dev/fullchain.pem`
@@ -409,12 +410,12 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 6. Nginx 시작 및 포트확인
     - `$ sudo service nginx start`
     - `$ netstat -ant`
-      - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/ssl_443.png?raw=true" width="60%" height="60%">
+      - <img src="https://github.com/Integerous/raspberry-server/blob/master/images/ssl_443.png?raw=true" width="600">
       - 443 포트 listening을 확인한다.
         
 7. SSL 적용 확인
     - SSL을 적용했는데 브라우저의 주소창 왼쪽 자물쇠가 여전히 잠겨있지 않다면, [whynopadlock](https://www.whynopadlock.com)에서 문제점을 진단받아본다.
-    - <img src="https://github.com/Integerous/images/blob/master/raspberry-pi/ssl_inspection.png?raw=true" width="60%" height="60%">
+    <img src="https://github.com/Integerous/raspberry-server/blob/master/images/ssl_inspection.png?raw=true" width="600">
     
 
 참고 : [LETSENCRYPT 에서 SSL 인증서를 무료로 발급 받아 웹 서버에 적용하기](https://kr.minibrary.com/353/)
@@ -475,9 +476,23 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 </br>
 
 # 1편 끝.
->2편은 Spring boot 어플리케이션을 라즈베리파이에 배포하는 과정을 정리할 예정이다.
+처음에 라즈베리파이에 토이프로젝트를 올려야겠다는 생각이 들었을 때는,    
+솔직히 이렇게 삽질을 많이 하게 될 줄(많은 걸 배우게 될 줄)은 몰랐다.  
+라즈베리파이 사서, OS 설치하고, wi-fi 연결하고, nginx 설치하고, jar파일 올리고, 도메인 연동하면 끝이라고 생각했던 것이다.  
+  
+실제로 그게 전부다.  
+하지만 그 사이사이에, 내가 가진 개발지식의 빈 틈들이 미쳐 날뛰어준 덕분에  
+`내가 이걸 여태 모르고 개발자라고 떠들고 다녔구나..` 라는 `아..하..` 모멘트가 쉴 새 없이 휘몰아쳤다.  
+
+컴공 전공자들은 대학생때 학교 과제로, 혹은 심심풀이로 만진다는 라즈베리파이를..  
+나는 뜨거운 쇠공을 굴리듯, 손 댈 때마다 `앗 뜨거!` 하며, 구글링 삼매경에 빠졌더랜다.  
+들인 시간 대비 실제로 한 것은 별로 없지만, 이렇게라도 빈 틈을 채울 수 있어서 좋았다.  
+
+>2편은 Spring boot 어플리케이션을 라즈베리파이에 배포하는 과정을 정리할 예정이고,  
+>3편은 토이프로젝트의 인프라 환경을 도커 기반으로 바꾸는 과정을 정리할 예정이다. 
 
 </br>
+
 ## Reference
 - https://brunch.co.kr/@topasvga/701
 - https://geeksvoyage.com/
