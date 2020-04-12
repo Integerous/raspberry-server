@@ -429,9 +429,9 @@ SD카드가 고장날 수 있고, 상황에 따라 데이터가 손실될 수 �
 2. 시스템 시간 확인
     - `$ date`
 3. 기존에 설정된 Crontab 확인
-    - `$ sudo cron -l`
+    - `$ sudo crontab -l`
 4. Crontab 편집
-    - `$ sudo cron -e`
+    - `$ sudo crontab -e`
     - 아래 내용 추가 후 저장  
     
         ~~~sh
